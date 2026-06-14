@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ANKA — AI OS</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="clock">
+      <div id="clock-time">--:--:--</div>
+      <div id="clock-date">--</div>
+    </div>
+    <div class="brand">
+      <h1>ANKA</h1>
+      <span>AI OS · by Sadık</span>
+    </div>
+    <div class="user-pill" id="user-pill">S</div>
+  </header>
+
+  <main class="layout">
+    <!-- Sol nav -->
+    <nav class="sidebar">
+      <button class="nav-btn active" data-view="chat">
+        <span class="icon">💬</span><span>KONU</span>
+      </button>
+      <button class="nav-btn" data-view="devices">
+        <span class="icon">🖥️</span><span>CİHAZ</span>
+      </button>
+      <button class="nav-btn" data-view="notes">
+        <span class="icon">📋</span><span>NOTLAR</span>
+      </button>
+      <button class="nav-btn" data-view="settings">
+        <span class="icon">⚙️</span><span>AYAR</span>
+      </button>
+    </nav>
+
+    <!-- Ana alan -->
+    <section class="main-area">
+
+      <!-- ===== CHAT VIEW ===== -->
+      <div class="view active" id="view-chat">
+        <div class="chat-status">
+          <div class="status-label">SES DURUMU</div>
+          <div class="status-value" id="voice-status">Hazır</div>
+        </div>
+
+        <div class="chat-stage">
+          <!-- Anka Kuşu Hologram -->
+          <div class="phoenix-container" id="phoenix-container">
+            <div class="phoenix-rings">
+              <div class="phoenix-ring pr1"></div>
+              <div class="phoenix-ring pr2"></div>
+              <div class="phoenix-ring pr3"></div>
+              <div class="phoenix-ring pr4"></div>
+            </div>
+            <div class="phoenix-glow"></div>
+            <svg class="phoenix-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+              <!-- Hologram ızgara çizgileri -->
+              <defs>
+                <filter id="hologram-glow">
+                  <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                  <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <linearGradient id="fireGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                  <stop offset="0%" style="stop-color:#ff4400;stop-opacity:0.9"/>
+                  <stop offset="50%" style="stop-color:#ff9900;stop-opacity:0.8"/>
+                  <stop offset="100%" style="stop-color:#00e0ff;stop-opacity:1"/>
+                </linearGradient>
+                <linearGradient id="wingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style="stop-color:#00e0ff;stop-opacity:0.9"/>
+                  <stop offset="100%" style="stop-color:#ff6600;stop-opacity:0.6"/>
+                </linearGradient>
+              </defs>
+              <!-- Sol kanat -->
+              <path d="M100,140 C70,120 30,110 10,80 C30,90 50,85 70,100 C60,75 40,60 20,40 C45,55 65,65 80,85 C75,60 65,40 55,20 C75,40 88,65 90,90 Z"
+                    fill="url(#wingGrad)" filter="url(#hologram-glow)" class="phoenix-wing-left"/>
+              <!-- Sağ kanat -->
+              <path d="M100,140 C130,120 170,110 190,80 C170,90 150,85 130,100 C140,75 160,60 180,40 C155,55 135,65 120,85 C125,60 135,40 145,20 C125,40 112,65 110,90 Z"
+                    fill="url(#wingGrad)" filter="url(#hologram-glow)" class="phoenix-wing-right"/>
+              <!-- Gövde -->
+              <ellipse cx="100" cy="115" rx="18" ry="30" fill="url(#fireGrad)" filter="url(#hologram-glow)"/>
+              <!-- Baş -->
+              <ellipse cx="100" cy="82" rx="12" ry="14" fill="url(#fireGrad)" filter="url(#hologram-glow)"/>
+              <!-- Gaga -->
+              <path d="M100,72 L106,66 L100,70 Z" fill="#00e0ff" filter="url(#hologram-glow)"/>
+              <!-- Göz -->
+              <circle cx="104" cy="79" r="3" fill="#fff" opacity="0.9"/>
+              <circle cx="104" cy="79" r="1.5" fill="#00e0ff"/>
+              <!-- Kuyruk tüyleri -->
+              <path d="M90,140 C85,155 80,165 75,175 C82,162 88,155 92,148 Z" fill="url(#fireGrad)" filter="url(#hologram-glow)"/>
+              <path d="M100,145 C100,162 98,172 96,182 C100,168 102,158 102,148 Z" fill="#00e0ff" opacity="0.8"/>
+              <path d="M110,140 C115,155 120,165 125,175 C118,162 112,155 108,148 Z" fill="url(#fireGrad)" filter="url(#hologram-glow)"/>
+              <!-- Hologram scan çizgileri -->
+              <line x1="0" y1="50" x2="200" y2="50" stroke="#00e0ff" stroke-width="0.3" opacity="0.3" class="scan-line"/>
+              <line x1="0" y1="100" x2="200" y2="100" stroke="#00e0ff" stroke-width="0.3" opacity="0.3" class="scan-line"/>
+              <line x1="0" y1="150" x2="200" y2="150" stroke="#00e0ff" stroke-width="0.3" opacity="0.3" class="scan-line"/>
+            </svg>
+            <!-- Ateş parçacıkları -->
+            <div class="fire-particles" id="fire-particles"></div>
+            <!-- Dinleme hologram efekti -->
+            <div class="listen-hologram" id="listen-hologram">
+              <canvas id="audio-visualizer" width="300" height="60"></canvas>
+              <div class="hologram-label">SES ALINIYOR</div>
+            </div>
+          </div>
+
+          <div class="chat-messages" id="chat-messages"></div>
+
+          <div class="chat-prompt">
+            <div class="prompt-title">Anka'ya bir şey sor…</div>
+            <div class="prompt-sub">Sistemler aktif. Komut bekleniyor.</div>
+          </div>
+        </div>
+
+        <!-- Ses görselleştirici (alt) -->
+        <div class="bottom-visualizer" id="bottom-visualizer">
+          <canvas id="bottom-canvas" width="600" height="80"></canvas>
+          <div class="vis-label">⚡ SES DALGASI</div>
+        </div>
+
+        <div class="chat-inputbar">
+          <button id="mic-btn" class="mic-btn" title="Sesli komut">🎙️</button>
+          <input id="chat-input" type="text" placeholder="Anka'ya bir şey sor..." autocomplete="off" />
+          <button id="send-btn" class="send-btn">➤</button>
+        </div>
+      </div>
+
+      <!-- ===== DEVICES VIEW ===== -->
+      <div class="view" id="view-devices">
+        <h2>BAĞLI CİHAZLAR</h2>
+        <div id="devices-list" class="devices-list"></div>
+      </div>
+
+      <!-- ===== NOTES VIEW ===== -->
+      <div class="view" id="view-notes">
+        <h2>NOTLAR</h2>
+        <div class="notes-toolbar">
+          <input id="note-search" placeholder="Notlarda ara..." />
+          <select id="note-filter">
+            <option>Tümü</option>
+            <option>Profesyonel</option>
+            <option>Sorumlu</option>
+            <option>Müracaat</option>
+            <option>Özel</option>
+            <option>Genel</option>
+          </select>
+          <button id="note-new-btn">+ Yeni Not</button>
+        </div>
+        <div id="notes-list" class="notes-grid"></div>
+      </div>
+
+      <!-- ===== SETTINGS VIEW ===== -->
+      <div class="view" id="view-settings">
+        <h2>AYARLAR</h2>
+
+        <div class="settings-grid">
+          <div class="setting-card">
+            <label>YAPAY ZEKA ADI</label>
+            <input id="set-ai-name" type="text" />
+            <small>Yapay zekaya nasıl hitap edeceğiniz</small>
+          </div>
+
+          <div class="setting-card">
+            <label>TERCİH EDİLEN DİL</label>
+            <select id="set-language">
+              <option value="tr">Türkçe</option>
+              <option value="en">English</option>
+              <option value="multi">Çok dilli</option>
+            </select>
+            <small>Ana yanıt dili</small>
+          </div>
+        </div>
+
+        <h3>SES MODELİ SEÇİMİ</h3>
+        <div class="voice-model-grid" id="voice-model-grid">
+          <!-- JS ile doldurulacak -->
+        </div>
+        <div class="setting-card" style="margin-top:12px">
+          <label>SES HIZI</label>
+          <input type="range" id="voice-rate" min="0.5" max="2" step="0.1" value="1" style="width:100%">
+          <small id="voice-rate-label">Hız: 1.0x</small>
+        </div>
+        <div class="setting-card" style="margin-top:8px">
+          <label>SES TON (PITCH)</label>
+          <input type="range" id="voice-pitch" min="0.5" max="2" step="0.1" value="1" style="width:100%">
+          <small id="voice-pitch-label">Ton: 1.0x</small>
+        </div>
+
+        <h3>YAPAY ZEKA KİŞİLİĞİ</h3>
+        <div class="personality-grid">
+          <button class="pers-card" data-value="Profesyonel">
+            <strong>Profesyonel</strong><span>Kibar, net, odaklı</span>
+          </button>
+          <button class="pers-card" data-value="Sorumlu">
+            <strong>Sorumlu</strong><span>Dikkatli, etik</span>
+          </button>
+          <button class="pers-card" data-value="Yaratıcı">
+            <strong>Yaratıcı</strong><span>Hayal gücü yüksek</span>
+          </button>
+          <button class="pers-card" data-value="Analitik">
+            <strong>Analitik</strong><span>Veriye dayalı</span>
+          </button>
+        </div>
+
+        <button id="save-settings" class="save-btn">AYARLARI KAYDET</button>
+
+        <h3>GİZLİLİK & HAFIZA</h3>
+        <div class="memory-actions">
+          <button id="export-memory">Hafızayı Dışa Aktar</button>
+          <button id="clear-memory" class="danger">Uzun Hafızayı Temizle</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Sağ panel -->
+    <aside class="rightpanel">
+      <div class="panel-card">
+        <div class="panel-head">
+          <span>BAĞLI CİHAZLAR</span>
+          <span class="badge" id="device-count">0</span>
+        </div>
+        <div id="right-devices" class="right-devices"></div>
+        <div class="panel-foot">Live status monitor</div>
+      </div>
+
+      <div class="panel-card">
+        <div class="panel-head"><span>KONUŞMA AKIŞI</span></div>
+        <div id="convo-flow" class="convo-flow">
+          <div class="muted">İlk komut bekleniyor.</div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="footer">
+    <span>ANKA SİSTEM</span> v2.0.0 · stable · <span class="ok">● All Systems OK</span> · <span class="creator">⚡ Kurucu: Sadık</span>
+  </footer>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
